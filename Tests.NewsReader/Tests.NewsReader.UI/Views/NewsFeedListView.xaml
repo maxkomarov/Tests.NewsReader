@@ -1,0 +1,74 @@
+﻿<UserControl x:Name="userControl" x:Class="Tests.NewsReader.UI.Views.NewsFeedListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewmodels="clr-namespace:Tests.NewsReader.UI.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewmodels:NewsFeedViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <DataTemplate x:Key="RowTemplate">
+            <StackPanel HorizontalAlignment="Left" Height="Auto" Margin="0">
+                <Canvas>
+                    <Path Margin="0 10 0 0" Height="20" Width="20" Stretch="Fill" Data="{StaticResource newspaperStyle0}" Stroke="White"/>
+                </Canvas>
+                <TextBlock Margin="30 0 0 0">
+                    <Hyperlink NavigateUri="{Binding SourceUrl}" Command="{Binding OpenCommand}" Cursor="Hand" ToolTip="Click to open current news in default browser" TextDecorations="None">
+                        <TextBlock  FontSize="26" Foreground="Gold" Margin="0" Text="{Binding Title}" TextWrapping="Wrap" MaxWidth="{Binding ActualWidth, ElementName=list, Mode=OneWay}" TextAlignment="Left"/>
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock FontSize="12" Foreground="LightGray" Margin="0" Text="{Binding PublishDate}"></TextBlock>
+                <TextBlock FontSize="20" Foreground="WhiteSmoke" Margin="0" Text="{Binding Summary}" TextWrapping="Wrap" MaxWidth="{Binding ActualWidth, ElementName=list, Mode=OneWay}" TextAlignment="Left"><Border/></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <ControlTemplate x:Key="NewsIcon">
+            <Canvas>
+                <Path Margin="0 -7 0 0" Height="14" Width="14" Stretch="Fill" Data="{StaticResource newspaperStyle0}" Stroke="White"/>
+            </Canvas>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ConnectIcon">
+            <Canvas>
+                <Path Margin="0 -7 0 0" Height="14" Width="14" Stretch="Fill" Data="{StaticResource connectStyle0}" Stroke="White"/>
+            </Canvas>
+        </ControlTemplate>
+        <ControlTemplate x:Key="RefreshIcon">
+            <Canvas>
+                <Path Margin="0 -7 0 0" Height="14" Width="14" Stretch="Fill" Data="{StaticResource refreshStyle0}" Stroke="White"/>
+            </Canvas>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ListHeaderTemplate">
+            <StackPanel Orientation="Horizontal" Width="{Binding ActualWidth, ElementName=list, Mode=OneWay}"  HorizontalAlignment="Center" Background="{DynamicResource HoverBackgroundCalendar}">
+                <Image Source="{Binding Path=ImageUrl}" Height="24" Margin="5 0 10 3"/>
+                <TextBlock VerticalAlignment="Center" Margin="0 5 0 0">
+                    <Hyperlink NavigateUri="{Binding Path=RssAddress}" Command="{Binding OpenFeedCommand}" Cursor="Hand" ToolTip="Click to open current feed in default browser"  TextDecorations="None">
+                        <TextBlock  Text="{Binding Path=Title}" Foreground="WhiteSmoke" FontWeight="SemiBold" FontSize="16" Height="28"/>
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Command="{Binding RefreshCommand}" Margin="10 5 0 5" ToolTip="Refresh current RSS-feed" FontWeight="DemiBold" Foreground="WhiteSmoke" >
+                <MenuItem.Icon>
+                    <ContentControl Template="{StaticResource RefreshIcon}"/>
+                </MenuItem.Icon>
+                <MenuItem.Header>
+                    <TextBlock Margin="10 0 0 0">Refresh</TextBlock>
+                </MenuItem.Header>
+            </MenuItem>
+        </Menu>
+        <ListView Grid.Row="1" x:Name="list" ItemsSource="{Binding Items}" SelectedItem="{Binding Path=SelectedItem}" SelectionMode="Single" >
+            <ListView.View>
+                <GridView ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <GridViewColumn CellTemplate="{StaticResource RowTemplate}" Width="{Binding ActualWidth, ElementName=list, Mode=OneWay}">
+                        <GridViewColumnHeader Template="{StaticResource ListHeaderTemplate}"/>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</UserControl>
